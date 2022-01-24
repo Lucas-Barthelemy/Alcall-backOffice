@@ -22,17 +22,8 @@ services:
   directus:
     container_name: directus
     image: directus/directus:latest
-    ports:
-      - 80:80
     volumes:
-      # By default, uploads are stored in /directus/uploads
-      # Always make sure your volumes matches the storage root when using
-      # local driver
       - ./uploads:/directus/uploads
-      # Make sure to also mount the volume when using SQLite
-      # - ./database:/directus/database
-      # If you want to load extensions from the host
-      # - ./extensions:/directus/extensions
     networks:
       - directus
     depends_on:
@@ -41,24 +32,23 @@ services:
     environment:
       KEY: '255d861b-5ea1-5996-9aa3-922530ec40b1'
       SECRET: '6116487b-cda1-52c2-b5b5-c8022c45e263'
-
       DB_CLIENT: 'pg'
       DB_HOST: 'database'
       DB_PORT: '5432'
       DB_DATABASE: 'directus'
       DB_USER: 'directus'
       DB_PASSWORD: 'directus'
-
       CACHE_ENABLED: 'true'
       CACHE_STORE: 'redis'
       CACHE_REDIS: 'redis://cache:6379'
-
       ADMIN_EMAIL: 'admin@example.com'
       ADMIN_PASSWORD: 'd1r3ctu5'
-
-      # Make sure to set this in production
-      # (see https://docs.directus.io/reference/environment-variables/#general)
-      # PUBLIC_URL: 'https://directus.example.com'
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.blog.rule=Host(`alcall.pierregourgouillon.com`)"
+      - "traefik.http.routers.blog.entrypoints=websecure"
 
 networks:
-  directus:
+  directus-network:
+  reverse-proxy:
+    external: true
