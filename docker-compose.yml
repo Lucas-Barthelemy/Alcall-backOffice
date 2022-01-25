@@ -4,10 +4,10 @@ services:
     container_name: database
     image: postgis/postgis:13-master
     restart: always
-    volumes:
-      - ./data/database:/var/lib/postgresql/data
     networks:
       - directus-network
+    volumes:
+      - ./data/database:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: 'directus'
       POSTGRES_PASSWORD: 'directus'
@@ -17,19 +17,19 @@ services:
     container_name: cache
     image: redis:6
     networks:
-     - directus-network
+      - directus-network
 
   directus:
     container_name: directus
     image: directus/directus:latest
     volumes:
       - ./uploads:/directus/uploads
-    depends_on:
-      - cache
-      - database
     networks:
       - web
       - directus-network
+    depends_on:
+      - cache
+      - database
     environment:
       KEY: '255d861b-5ea1-5996-9aa3-922530ec40b1'
       SECRET: '6116487b-cda1-52c2-b5b5-c8022c45e263'
@@ -46,14 +46,15 @@ services:
       ADMIN_PASSWORD: 'd1r3ctu5'
     labels:
       - traefik.enable=true
-      - "traefik.http.routers.blog.rule=Host(`alcall.pierregourgouillon.com`)"
-      - "traefik.http.routers.blog.entrypoints=websecure"
-      
-     # - traefik.http.services.loadbalancer.server.port=8055
-     # - traefik.http.routers.entrypoints=http
-     # - traefik.http.routers.entrypoints=https
-     # - traefik.http.routers.tls=true
-     # - traefik.http.routers.tls.certresolver=letsencrypt
+      - traefik.http.services.EASYSELLING.loadbalancer.server.port=8055
+      - traefik.http.routers.EASYSELLING.rule=Host(`alcall.pierregourgouillon.com`)
+      - traefik.http.routers.EASYSELLING.entrypoints=http
+      - traefik.http.routers.EASYSELLING.middlewares=https-redirect@file
+      - traefik.http.routers.EASYSELLING-Https.rule=Host(`alcall.pierregourgouillon.com`)
+      - traefik.http.routers.EASYSELLING-Https.entrypoints=https
+      - traefik.http.routers.EASYSELLING-Https.middlewares=security@file, compression@file
+      - traefik.http.routers.EASYSELLING-Https.tls=true
+      - traefik.http.routers.EASYSELLING-Https.tls.certresolver=letsencrypt
 networks:
   directus-network:
   web:
