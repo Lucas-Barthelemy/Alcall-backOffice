@@ -10,7 +10,6 @@ services:
       - ./.env
     volumes:
       - ./data/database:/var/lib/postgresql/data
-    environment:
 
   directus:
     container_name: directus
@@ -24,19 +23,17 @@ services:
       - directus-network
     depends_on:
       - database
-    environment:
-
     labels:
       - traefik.enable=true
-      - traefik.http.services.EASYSELLING.loadbalancer.server.port=8055
-      - traefik.http.routers.EASYSELLING.rule=Host(`alcall.pierregourgouillon.com`)
-      - traefik.http.routers.EASYSELLING.entrypoints=http
-      - traefik.http.routers.EASYSELLING.middlewares=https-redirect@file
-      - traefik.http.routers.EASYSELLING-Https.rule=Host(`alcall.pierregourgouillon.com`)
-      - traefik.http.routers.EASYSELLING-Https.entrypoints=https
-      - traefik.http.routers.EASYSELLING-Https.middlewares=security@file, compression@file
-      - traefik.http.routers.EASYSELLING-Https.tls=true
-      - traefik.http.routers.EASYSELLING-Https.tls.certresolver=letsencrypt
+      - traefik.http.services.ALCALL.loadbalancer.server.port=8055
+      - traefik.http.routers.ALCALL.rule=Host(`alcall.pierregourgouillon.com`)
+      - traefik.http.routers.ALCALL.entrypoints=http
+      - traefik.http.routers.ALCALL.middlewares=https-redirect@file
+      - traefik.http.routers.ALCALL-Https.rule=Host(`alcall.pierregourgouillon.com`)
+      - traefik.http.routers.ALCALL-Https.entrypoints=https
+      - traefik.http.routers.ALCALL-Https.middlewares=security@file, compression@file
+      - traefik.http.routers.ALCALL-Https.tls=true
+      - traefik.http.routers.ALCALL-Https.tls.certresolver=letsencrypt
 networks:
   directus-network:
   web:
