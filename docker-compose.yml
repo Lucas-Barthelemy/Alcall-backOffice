@@ -4,11 +4,14 @@ services:
     container_name: database
     image: postgis/postgis:13-master
     restart: always
-    volumes:
-      - ./data/database:/var/lib/postgresql/data
+    networks:
+      - directus-network
     env_file:
       - ./.env
-      
+    volumes:
+      - ./data/database:/var/lib/postgresql/data
+    environment:
+
   directus:
     container_name: directus
     image: directus/directus:latest
@@ -17,9 +20,12 @@ services:
     env_file:
       - ./.env
     networks:
-      - directus
+      - web
+      - directus-network
     depends_on:
       - database
+    environment:
+
     labels:
       - traefik.enable=true
       - traefik.http.services.EASYSELLING.loadbalancer.server.port=8055
@@ -31,8 +37,7 @@ services:
       - traefik.http.routers.EASYSELLING-Https.middlewares=security@file, compression@file
       - traefik.http.routers.EASYSELLING-Https.tls=true
       - traefik.http.routers.EASYSELLING-Https.tls.certresolver=letsencrypt
-
 networks:
   directus-network:
-  reverse-proxy:
+  web:
     external: true
