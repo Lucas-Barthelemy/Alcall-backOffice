@@ -6,47 +6,31 @@ services:
     restart: always
     volumes:
       - ./data/database:/var/lib/postgresql/data
-    networks:
-      - directus
-    environment:
-      POSTGRES_USER: 'directus'
-      POSTGRES_PASSWORD: 'directus'
-      POSTGRES_DB: 'directus'
-
-  cache:
-    container_name: cache
-    image: redis:6
-    networks:
-      - directus
-
+    env_file:
+      - ./.env
+      
   directus:
     container_name: directus
     image: directus/directus:latest
     volumes:
       - ./uploads:/directus/uploads
+    env_file:
+      - ./.env
     networks:
       - directus
     depends_on:
-      - cache
       - database
-    environment:
-      KEY: '255d861b-5ea1-5996-9aa3-922530ec40b1'
-      SECRET: '6116487b-cda1-52c2-b5b5-c8022c45e263'
-      DB_CLIENT: 'pg'
-      DB_HOST: 'database'
-      DB_PORT: '5432'
-      DB_DATABASE: 'directus'
-      DB_USER: 'directus'
-      DB_PASSWORD: 'directus'
-      CACHE_ENABLED: 'true'
-      CACHE_STORE: 'redis'
-      CACHE_REDIS: 'redis://cache:6379'
-      ADMIN_EMAIL: 'admin@example.com'
-      ADMIN_PASSWORD: 'd1r3ctu5'
     labels:
       - traefik.enable=true
-      - "traefik.http.routers.blog.rule=Host(`alcall.pierregourgouillon.com`)"
-      - "traefik.http.routers.blog.entrypoints=websecure"
+      - traefik.http.services.EASYSELLING.loadbalancer.server.port=8055
+      - traefik.http.routers.EASYSELLING.rule=Host(`alcall.pierregourgouillon.com`)
+      - traefik.http.routers.EASYSELLING.entrypoints=http
+      - traefik.http.routers.EASYSELLING.middlewares=https-redirect@file
+      - traefik.http.routers.EASYSELLING-Https.rule=Host(`alcall.pierregourgouillon.com`)
+      - traefik.http.routers.EASYSELLING-Https.entrypoints=https
+      - traefik.http.routers.EASYSELLING-Https.middlewares=security@file, compression@file
+      - traefik.http.routers.EASYSELLING-Https.tls=true
+      - traefik.http.routers.EASYSELLING-Https.tls.certresolver=letsencrypt
 
 networks:
   directus-network:
