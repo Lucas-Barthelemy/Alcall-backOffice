@@ -1,0 +1,22 @@
+services:
+  node-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: node-server
+    networks:
+      - web
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.ALCALL.loadbalancer.server.port=80
+      - traefik.http.routers.ALCALL.rule=Host(`alcall.pierregourgouillon.com`)
+      - traefik.http.routers.ALCALL.entrypoints=http
+      - traefik.http.routers.ALCALL.middlewares=https-redirect@file
+      - traefik.http.routers.ALCALL-Https.rule=Host(`alcall.pierregourgouillon.com`)
+      - traefik.http.routers.ALCALL-Https.entrypoints=https
+      - traefik.http.routers.ALCALL-Https.middlewares=security@file, compression@file
+      - traefik.http.routers.ALCALL-Https.tls=true
+      - traefik.http.routers.ALCALL-Https.tls.certresolver=letsencrypt
+networks:
+ web:
+  external: true
