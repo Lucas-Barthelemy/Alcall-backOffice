@@ -52,7 +52,7 @@ exports.createEvent = async (req, res, next) => {
             data: newEvent
         });
     } catch (error) {
-        res.status(404).json({
+        res.status(500).json({
             error: "INTERNAL_ERROR",
             data: null
         });
@@ -73,7 +73,7 @@ exports.getEvents = async (req, res, next) => {
 exports.getEventById = async (req, res, next) => {
     try {
         const event = await Event.findOne({ _id: req.params.eventId})
-        res.status(201).json({
+        res.status(200).json({
             error: null,
             data: event
         });

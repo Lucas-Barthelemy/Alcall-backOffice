@@ -1,10 +1,10 @@
 const swaggerDefinition = {
     openapi: '3.0.0',
     info: {
-        title: 'Express API for JSONPlaceholder',
+        title: 'ALCALL API Documentation',
         version: '1.0.0',
         description:
-            'This is a REST API application made with Express. It retrieves data from JSONPlaceholder.',
+            'This is a documentation for the project Alcall',
         license: {
             name: 'Licensed Under MIT',
             url: 'https://spdx.org/licenses/MIT.html',
@@ -16,7 +16,7 @@ const swaggerDefinition = {
     },
     servers: [
         {
-            url: 'http://localhost:3000',
+            url: 'https://alcall.pierregourgouillon.com/api/',
             description: 'Development server',
         },
     ],
@@ -24,7 +24,7 @@ const swaggerDefinition = {
 
 const options = {
     swaggerDefinition,
-    apis: ["./src/routes/*.js"]
+    apis: ["./src/docs/routes/*.js"]
 }
 
 module.exports = options
