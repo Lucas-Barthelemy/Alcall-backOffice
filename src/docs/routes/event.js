@@ -43,12 +43,48 @@
  *                         example: 3t23ROWqfbZSNoV2VkegA7W6Beh1
  */
 
+//MODEL NEW EVENT
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     NewEvent:
+ *       type: object
+ *       properties:
+ *                       name:
+ *                         type: string
+ *                         description: The event name.
+ *                         example: Le Moulin
+ *                       description:
+ *                         type: string
+ *                         description: The event description.
+ *                         example: Event description
+ *                       date:
+ *                         type: string
+ *                         description: The event date.
+ *                         example: Event date
+ *                       street:
+ *                         type: string
+ *                         description: The event street.
+ *                         example: 10 rue de Jean Macé
+ *                       city:
+ *                         type: string
+ *                         description: The event city.
+ *                         example: Lyon
+ *                       price:
+ *                         type: string
+ *                         description: The event price.
+ *                         example: 10.15
+ */
 
+//GET ALL EVENT
 /**
  * @swagger
  * /event/:
  *  get:
  *    summary: Get all event [AUTH]
+ *    tags:
+ *     - Event
  *    parameters:
  *    - in: path
  *      name: Bearer
@@ -74,11 +110,14 @@
  *
  */
 
+//GET EVENT WITH ID
 /**
  * @swagger
  * /event/{eventId}:
  *  get:
  *    summary: Get one event with id [AUTH]
+ *    tags:
+ *     - Event
  *    parameters:
  *    - in: path
  *      name: Bearer
@@ -115,12 +154,20 @@
  *
  */
 
-
+//CREATE EVENT
 /**
  * @swagger
  * /event/:
  *  post:
  *    summary: Create event [AUTH]
+ *    tags:
+ *     - Event
+ *    requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewEvent'
  *    parameters:
  *    - in: path
  *      name: Bearer
@@ -183,12 +230,14 @@
  *
  */
 
-
+//MODIFY EVENT
 /**
  * @swagger
  * /event{eventId}:
  *  put:
  *    summary: Modify event [AUTH]
+ *    tags:
+ *     - Event
  *    parameters:
  *    - in: path
  *      name: Bearer
@@ -277,12 +326,14 @@
  *
  */
 
-
+//DELETE EVENT
 /**
  * @swagger
  * /event{eventId}:
  *  delete:
  *    summary: Delete event [AUTH]
+ *    tags:
+ *     - Event
  *    parameters:
  *    - in: path
  *      name: Bearer
