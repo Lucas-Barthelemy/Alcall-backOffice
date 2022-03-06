@@ -9,10 +9,13 @@ exports.registerUser = async (req, res, next) => {
         await user.save()
         res.status(201).json({
             error: null,
-            data: 'Post saved successfully!'
+            data: {}
         });
     } catch (error) {
-        res.status(400).json({ error: error });
+        res.status(400).json({
+            error: "INTERNAL_ERROR",
+            data: {}
+        });
     }
 }
 
