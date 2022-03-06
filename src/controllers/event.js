@@ -234,11 +234,8 @@ module.exports.addMembers = async (req, res) => {
         });
     } catch (e) {
         res.status(500).json({
-            error: "UNKNOW_ERROR",
+            error: "UNKNOWN_ERROR",
             data: null,
         });
-        return
     }
-
-    Event.updateOne()
 }
