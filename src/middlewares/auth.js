@@ -4,11 +4,17 @@ const userDto = require("../dto/UserDTO");
 async function authMiddleware(request, response, next) {
     const headerToken = request.headers.authorization;
     if (!headerToken) {
-        return response.send({ message: "No token provided" }).status(401);
+        return response.send({
+            error: "NO_TOKEN_PROVIDED",
+            data: null
+        }).status(401);
     }
 
     if (headerToken && headerToken.split(" ")[0] !== "Bearer") {
-        response.send({ message: "Invalid token" }).status(401);
+        response.send({
+            error: "INVALID_TOKEN",
+            data: null
+        }).status(401);
     }
     const token = headerToken.split(" ")[1];
     try {
@@ -22,7 +28,10 @@ async function authMiddleware(request, response, next) {
         request.user = usr
         next();
     } catch (error) {
-        return response.send({ message: error.message }).status(401);
+        return response.send({
+            error: "INVALID_TOKEN",
+            data: null
+        }).status(401);
     }
 }
 

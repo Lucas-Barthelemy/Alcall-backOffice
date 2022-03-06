@@ -230,6 +230,89 @@
  *
  */
 
+//ADD MEMBERS
+/**
+ * @swagger
+ * /event/{eventId}/addMembers :
+ *  post:
+ *    summary: Add current user in the members [AUTH]
+ *    tags:
+ *     - Event
+ *    parameters:
+ *    - in: path
+ *      name: Bearer
+ *      schema:
+ *        type: string
+ *      required: true
+ *    description:
+ *    responses:
+ *      '200':
+ *        description: Current user is added
+ *        content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: null
+ *                 data:
+ *                   $ref: '#/components/schemas/Event'
+ *      '401':
+ *        description: Current user is the event owner
+ *        content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: YOU_ARE_OWNER
+ *                 data:
+ *                   type: string
+ *                   example: null
+ *      '401 ':
+ *        description: Current user is already in the members
+ *        content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: USER_IS_ALREADY_IN_MEMBERS
+ *                 data:
+ *                   type: string
+ *                   example: null
+ *      '404':
+ *        description: Event not found
+ *        content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: NOT_FOUND
+ *                 data:
+ *                   type: string
+ *                   example: null
+ *      '500':
+ *        description: Unknown error
+ *        content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: UNKNOWN_ERROR
+ *                 data:
+ *                   type: string
+ *                   example: null
+ *
+ */
+
 //MODIFY EVENT
 /**
  * @swagger

@@ -38,6 +38,7 @@ exports.createEvent = async (req, res, next) => {
             error: "NOT_VALID_TYPE",
             data: null
         });
+        return
     }
 
     const event = new Event({
@@ -121,6 +122,7 @@ exports.modifyEvent = async (req, res, next) => {
             error: "NOT_VALID_TYPE",
             data: null
         });
+        return
     }
 
 
@@ -134,11 +136,12 @@ exports.modifyEvent = async (req, res, next) => {
         });
     }
 
-    if (!(req.user.firebaseId == eventFind.owner)) {
+    if (!(req.user.firebaseId === eventFind.owner)) {
         res.status(401).json({
             error: "NOT_OWNER",
             data: null
         });
+        return
     }
 
     try {
@@ -173,6 +176,7 @@ exports.deleteEvent = async (req, res, next) => {
             error: "NOT_OWNER",
             data: null
         });
+        return
     }
 
     try {
@@ -187,4 +191,54 @@ exports.deleteEvent = async (req, res, next) => {
             data: null,
         });
     }
+}
+
+module.exports.addMembers = async (req, res) => {
+    let event = null
+    const eventId = req.params.eventId
+
+    try {
+        event  = await Event.findOne({ _id: eventId })
+    } catch (e) {
+        res.status(404).json({
+            error: "NOT_FOUND",
+            data: null,
+        });
+        return
+    }
+
+    if (event.owner === req.user.firebaseId) {
+        res.status(401).json({
+            error: "YOU_ARE_OWNER",
+            data: null,
+        });
+        return
+    }
+
+    if (event.members.includes(req.user.firebaseId)) {
+        res.status(401).json({
+            error: "USER_IS_ALREADY_IN_MEMBERS",
+            data: null,
+        });
+        return
+    }
+
+    try {
+        await Event.updateOne({ _id: eventId }, { members: [...event.members, req.user.firebaseId] })
+
+        let eventUpdate  = await Event.findOne({ _id: eventId })
+
+        res.status(200).json({
+            error: null,
+            data: eventUpdate,
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: "UNKNOW_ERROR",
+            data: null,
+        });
+        return
+    }
+
+    Event.updateOne()
 }
