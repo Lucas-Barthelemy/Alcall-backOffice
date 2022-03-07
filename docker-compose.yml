@@ -1,31 +1,14 @@
-version: '3'
 services:
-  database:
-    container_name: database
-    image: postgis/postgis:13-master
-    restart: always
-    networks:
-      - directus-network
-    env_file:
-      - ./.env
-    volumes:
-      - ./data/database:/var/lib/postgresql/data
-
-  directus:
-    container_name: directus
-    image: directus/directus:latest
-    volumes:
-      - ./uploads:/directus/uploads
-    env_file:
-      - ./.env
+  node-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: node-server
     networks:
       - web
-      - directus-network
-    depends_on:
-      - database
     labels:
       - traefik.enable=true
-      - traefik.http.services.ALCALL.loadbalancer.server.port=8055
+      - traefik.http.services.ALCALL.loadbalancer.server.port=80
       - traefik.http.routers.ALCALL.rule=Host(`alcall.pierregourgouillon.com`)
       - traefik.http.routers.ALCALL.entrypoints=http
       - traefik.http.routers.ALCALL.middlewares=https-redirect@file
@@ -35,6 +18,5 @@ services:
       - traefik.http.routers.ALCALL-Https.tls=true
       - traefik.http.routers.ALCALL-Https.tls.certresolver=letsencrypt
 networks:
-  directus-network:
-  web:
-    external: true
+ web:
+  external: true
