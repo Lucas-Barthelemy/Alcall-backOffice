@@ -1,5 +1,6 @@
 const Event = require("../models/eventModel");
 const e = require("express");
+const typeEvent = require('../Enum/TypeEvent')
 
 // [POST]
 exports.createEvent = async (req, res, next) => {
@@ -20,6 +21,8 @@ exports.createEvent = async (req, res, next) => {
                 break;
             case 'price':
                 break;
+            case 'type':
+                break;
             case 'owner':
                 break;
             default:
@@ -31,9 +34,19 @@ exports.createEvent = async (req, res, next) => {
         }
     }
 
-    const { price } = req.body
+    const { price, type } = req.body
 
     if (!parseFloat(price)) {
+        res.status(400).json({
+            error: "NOT_VALID_TYPE",
+            data: null
+        });
+        return
+    }
+
+    try {
+        typeEvent(type)
+    } catch (error) {
         res.status(400).json({
             error: "NOT_VALID_TYPE",
             data: null
@@ -104,6 +117,8 @@ exports.modifyEvent = async (req, res, next) => {
                 break;
             case 'price':
                 break;
+            case 'type':
+                break;
             case 'owner':
                 break;
             default:
@@ -115,7 +130,7 @@ exports.modifyEvent = async (req, res, next) => {
         }
     }
 
-    const { price } = req.body
+    const { price, type } = req.body
 
     if (price && !parseFloat(price)) {
         res.status(400).json({
@@ -125,6 +140,15 @@ exports.modifyEvent = async (req, res, next) => {
         return
     }
 
+    try {
+        typeEvent(type)
+    } catch (error) {
+        res.status(400).json({
+            error: "NOT_VALID_TYPE",
+            data: null
+        });
+        return
+    }
 
     let eventFind = null
     try {
@@ -134,6 +158,7 @@ exports.modifyEvent = async (req, res, next) => {
             error: "NOT_FOUND",
             data: null
         });
+        return
     }
 
     if (!(req.user.firebaseId === eventFind.owner)) {

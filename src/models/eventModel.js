@@ -8,6 +8,7 @@ const eventSchema = mongoose.Schema({
     street: { type: String, required: true },
     city: { type: String, required: true },
     price: { type: String, required: true },
+    type: { type: String, required: true },
     owner: { type: String, required: true },
 })
 
