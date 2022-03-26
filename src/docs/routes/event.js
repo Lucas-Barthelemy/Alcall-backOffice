@@ -37,6 +37,10 @@
  *                         type: string
  *                         description: The event price.
  *                         example: 10.15
+ *                       type:
+ *                         type: string
+ *                         description: The event type.
+ *                         example: CHILL
  *                       owner:
  *                         type: string
  *                         description: The event owner.
@@ -75,6 +79,10 @@
  *                         type: string
  *                         description: The event price.
  *                         example: 10.15
+ *                       type:
+ *                         type: string
+ *                         description: The event type.
+ *                         example: CHILL
  */
 
 //GET ALL EVENT
