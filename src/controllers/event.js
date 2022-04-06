@@ -264,3 +264,53 @@ module.exports.addMembers = async (req, res) => {
         });
     }
 }
+
+module.exports.deleteMembers = async (req, res) => {
+    let event = null
+    const eventId = req.params.eventId
+
+    try {
+        event  = await Event.findOne({ _id: eventId })
+    } catch (e) {
+        res.status(404).json({
+            error: "NOT_FOUND",
+            data: null,
+        });
+        return
+    }
+
+    if (event.owner === req.user.firebaseId) {
+        res.status(401).json({
+            error: "YOU_ARE_OWNER",
+            data: null,
+        });
+        return
+    }
+
+    if (!event.members.includes(req.user.firebaseId)) {
+        res.status(401).json({
+            error: "USER_IS_NOT_IN_MEMBERS",
+            data: null,
+        });
+        return
+    }
+
+    try {
+        let newMembers = event.members.filter((member) => {
+            return member != req.user.firebaseId
+        })
+        await Event.updateOne({ _id: eventId }, { members: newMembers })
+
+        let eventUpdate  = await Event.findOne({ _id: eventId })
+
+        res.status(200).json({
+            error: null,
+            data: eventUpdate,
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: "UNKNOWN_ERROR",
+            data: null,
+        });
+    }
+}
