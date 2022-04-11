@@ -77,9 +77,22 @@ exports.createEvent = async (req, res, next) => {
 exports.getEvents = async (req, res, next) => {
     const events = await Event.find()
 
+    let eventsResult = events.filter((event) => {
+        if (event.owner !== req.user.firebaseId) {
+            return event
+        }
+    })
+
+    if (eventsResult.length === 0) {
+        res.status(200).json({
+            error: null,
+            data: null
+        });
+    }
+
     res.status(200).json({
         error: null,
-        data: events
+        data: eventsResult
     });
 }
 
