@@ -2,7 +2,7 @@ const Group = require("../models/groupModel.js");
 
 // [POST]
 exports.createGroup = async (req, res, next) => {
-
+    console.log('HERE')
     for (const param in req.body) {
         switch (param) {
             case 'name':
