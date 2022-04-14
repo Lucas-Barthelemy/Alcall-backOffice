@@ -2,6 +2,8 @@ const Event = require("../models/eventModel");
 const Group = require("../models/groupModel");
 const express = require("express");
 const typeEvent = require('../Enum/TypeEvent');
+const User = require('../models/userModel');
+
 
 // [GET]
 exports.getEvents = async (req, res, next) => {
@@ -47,4 +49,19 @@ exports.getGroups = async (req, res, next) => {
         error: null,
         data: myGroups
     });
+}
+
+exports.getMe = async (req, res) => {
+    try {
+        let myInformations = await User.findOne({ firebaseId: req.user.firebaseId });
+        res.status(200).json({
+            error: null,
+            data: myInformations
+        });
+    } catch (e) {
+        res.status(404).json({
+            error: "NOT_FOUND",
+            data: null
+        });
+    }
 }
