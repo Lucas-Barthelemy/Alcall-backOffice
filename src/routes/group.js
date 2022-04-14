@@ -5,7 +5,7 @@ const groupController = require('../controllers/group');
 router.get('/:groupId', groupController.getGroupById);
 
 router.post('/', groupController.createGroup);
-router.post('/:groupId/members/add', groupController.addMembers);
+router.post('/:userId/:groupId/members/add', groupController.addMembers);
 
 router.put('/:groupId', groupController.modifyGroup);
 

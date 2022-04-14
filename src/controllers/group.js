@@ -179,7 +179,7 @@ module.exports.addMembers = async (req, res) => {
     }
 
     try {
-        await Group.updateOne({ _id: groupId }, { members: [...group.members, req.user.firebaseId] })
+        await Group.updateOne({ _id: groupId }, { members: [...group.members, req.params.userId] })
         let groupUpdate  = await Group.findOne({ _id: groupId })
         res.status(200).json({
             error: null,
