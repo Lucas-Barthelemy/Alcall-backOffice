@@ -6,6 +6,7 @@ const express = require('express'),
       eventRoutes = require('./routes/event'),
       authRoutes = require('./routes/auth'),
       groupRoutes = require('./routes/group'),
+      userRoutes = require('./routes/user'),
       myRoutes = require('./routes/me'),
       connectionMongoDB = require('./mongoDB/connection'),
       app = express(),
@@ -22,6 +23,7 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc(swaggerDoc)))
 app.use('/api/auth', authMiddleware, authRoutes);
 app.use('/api/events', authMiddleware, eventRoutes);
 app.use('/api/groups', authMiddleware, groupRoutes);
+app.use('/api/user', authMiddleware, userRoutes);
 app.use('/api/me', authMiddleware, myRoutes);
 
 module.exports = app;
