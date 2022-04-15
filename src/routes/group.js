@@ -10,6 +10,7 @@ router.post('/:userId/:groupId/members/add', groupController.addMembers);
 router.put('/:groupId', groupController.modifyGroup);
 
 router.delete('/:groupId', groupController.deleteGroup);
-router.delete('/:groupId/members/delete', groupController.deleteMembers);
+router.delete('/:groupId/members/delete', groupController.deleteMe);
+router.delete('/:userId/:groupId/members/delete', groupController.deleteMembers);
 
 module.exports = router;
