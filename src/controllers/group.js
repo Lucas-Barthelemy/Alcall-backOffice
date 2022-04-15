@@ -194,9 +194,8 @@ module.exports.addMembers = async (req, res) => {
         });
     }
 }
-
-// DELETE
-module.exports.deleteMembers = async (req, res) => {
+//DELETE
+module.exports.deleteMe = async (req, res) => {
     let group = null
     const groupId = req.params.groupId
 
@@ -229,6 +228,59 @@ module.exports.deleteMembers = async (req, res) => {
     try {
         let newMembers = group.members.filter((member) => {
             return member != req.user.firebaseId
+        })
+        await Group.updateOne({ _id: groupId }, { members: newMembers })
+
+        let groupUpdate  = await Group.findOne({ _id: groupId })
+
+        res.status(200).json({
+            error: null,
+            data: groupUpdate,
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: "UNKNOWN_ERROR",
+            data: null,
+        });
+    }
+}
+
+
+// DELETE
+module.exports.deleteMembers = async (req, res) => {
+    let group = null
+    const userId = req.params.userId
+    const groupId = req.params.groupId
+
+    try {
+        group  = await Group.findOne({ _id: groupId })
+    } catch (e) {
+        res.status(404).json({
+            error: "NOT_FOUND",
+            data: null,
+        });
+        return
+    }
+
+    if (group.owner !== req.user.firebaseId) {
+        res.status(401).json({
+            error: "YOU_ARE_NOT_OWNER",
+            data: null,
+        });
+        return
+    }
+
+    if (!group.members.includes(userId)) {
+        res.status(401).json({
+            error: "USER_IS_NOT_IN_MEMBERS",
+            data: null,
+        });
+        return
+    }
+
+    try {
+        let newMembers = group.members.filter((member) => {
+            return member != userId
         })
         await Group.updateOne({ _id: groupId }, { members: newMembers })
 

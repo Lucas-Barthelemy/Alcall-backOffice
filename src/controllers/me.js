@@ -1,12 +1,13 @@
 const Event = require("../models/eventModel");
 const Group = require("../models/groupModel");
+const User = require('../models/userModel');
 const express = require("express");
 const typeEvent = require('../Enum/TypeEvent');
-const User = require('../models/userModel');
+
 
 
 // [GET]
-exports.getEvents = async (req, res, next) => {
+exports.getEvents = async (req, res) => {
     const events = await Event.find()
 
     let myEvents = events.filter((event) => {
@@ -20,20 +21,21 @@ exports.getEvents = async (req, res, next) => {
             error: null,
             data: null
         });
+    } else {
+        res.status(200).json({
+            error: null,
+            data: myEvents
+        });
     }
-
-    res.status(200).json({
-        error: null,
-        data: myEvents
-    });
 }
 
 // [GET]
-exports.getGroups = async (req, res, next) => {
+exports.getGroups = async (req, res) => {
     const groups = await Group.find()
+    const user = await User.findOne({firebaseId: req.user.firebaseId})
 
     let myGroups = groups.filter((group) => {
-        if (group.owner === req.user.firebaseId || group.members.includes(req.user.firebaseId)) {
+        if (group.owner === req.user.firebaseId || group.members.includes(user._id)) {
             return group
         }
     })
@@ -43,12 +45,12 @@ exports.getGroups = async (req, res, next) => {
             error: null,
             data: null
         });
+    } else {
+        res.status(200).json({
+            error: null,
+            data: myGroups
+        });
     }
-
-    res.status(200).json({
-        error: null,
-        data: myGroups
-    });
 }
 
 exports.getMe = async (req, res) => {
