@@ -1,8 +1,9 @@
 const Group = require("../models/groupModel.js");
+const User = require("../models/userModel.js");
 
 // [POST]
 exports.createGroup = async (req, res, next) => {
-    console.log('HERE')
+
     for (const param in req.body) {
         switch (param) {
             case 'name':
@@ -150,6 +151,7 @@ exports.deleteGroup = async (req, res, next) => {
 // POST
 module.exports.addMembers = async (req, res) => {
     let group = null
+    const userId = req.params.userId
     const groupId = req.params.groupId
 
     try {
@@ -162,15 +164,15 @@ module.exports.addMembers = async (req, res) => {
         return
     }
 
-    if (group.owner === req.user.firebaseId) {
+    if (group.owner !== req.user.firebaseId) {
         res.status(401).json({
-            error: "YOU_ARE_OWNER",
+            error: "YOU_ARE_NOT_OWNER",
             data: null,
         });
         return
     }
 
-    if (group.members.includes(req.user.firebaseId)) {
+    if (group.members.includes(userId)) {
         res.status(401).json({
             error: "USER_IS_ALREADY_IN_MEMBERS",
             data: null,
@@ -179,7 +181,7 @@ module.exports.addMembers = async (req, res) => {
     }
 
     try {
-        await Group.updateOne({ _id: groupId }, { members: [...group.members, req.params.userId] })
+        await Group.updateOne({ _id: groupId }, { members: [...group.members, userId] })
         let groupUpdate  = await Group.findOne({ _id: groupId })
         res.status(200).json({
             error: null,
@@ -242,4 +244,8 @@ module.exports.deleteMembers = async (req, res) => {
             data: null,
         });
     }
+}
+
+const capitalize = str => {
+    return str.charAt(0).toUpperCase() + str.slice(1)
 }
