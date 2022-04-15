@@ -198,6 +198,7 @@ module.exports.addMembers = async (req, res) => {
 module.exports.deleteMe = async (req, res) => {
     let group = null
     const groupId = req.params.groupId
+    const user = await User.findOne({firebaseId: req.user.firebaseId})
 
     try {
         group  = await Group.findOne({ _id: groupId })
@@ -217,7 +218,7 @@ module.exports.deleteMe = async (req, res) => {
         return
     }
 
-    if (!group.members.includes(req.user.firebaseId)) {
+    if (!group.members.includes(user._id)) {
         res.status(401).json({
             error: "USER_IS_NOT_IN_MEMBERS",
             data: null,
@@ -227,7 +228,7 @@ module.exports.deleteMe = async (req, res) => {
 
     try {
         let newMembers = group.members.filter((member) => {
-            return member != req.user.firebaseId
+            return member != user._id
         })
         await Group.updateOne({ _id: groupId }, { members: newMembers })
 
